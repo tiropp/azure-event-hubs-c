@@ -1230,6 +1230,7 @@ void EventHubClient_LL_Destroy(EVENTHUBCLIENT_LL_HANDLE eventhub_client_ll)
         /* Codes_SRS_EVENTHUBCLIENT_LL_01_041: [All pending message data shall be freed.] */
         while ((unsend = DList_RemoveHeadList(&(eventhub_client_ll->outgoingEvents))) != &(eventhub_client_ll->outgoingEvents))
         {
+            size_t index;
             EVENTHUB_EVENT_LIST* temp = containingRecord(unsend, EVENTHUB_EVENT_LIST, entry);
             /* Codes_SRS_EVENTHUBCLIENT_LL_01_040: [All the pending messages shall be indicated as error by calling the associated callback with EVENTHUBCLIENT_CONFIRMATION_DESTROY.] */
             if (temp->callback != NULL)
@@ -1238,7 +1239,7 @@ void EventHubClient_LL_Destroy(EVENTHUBCLIENT_LL_HANDLE eventhub_client_ll)
             }
 
             /* Codes_SRS_EVENTHUBCLIENT_LL_01_041: [All pending message data shall be freed.] */
-            for (size_t index = 0; index < temp->eventCount; index++)
+            for (index = 0; index < temp->eventCount; index++)
             {
                 EventData_Destroy(temp->eventDataList[index]);
             }
@@ -1435,7 +1436,8 @@ EVENTHUBCLIENT_RESULT EventHubClient_LL_SendBatchAsync(EVENTHUBCLIENT_LL_HANDLE 
 
                     if (index < newEntry->eventCount)
                     {
-                        for (size_t i = 0; i < index; i++)
+                        size_t i;
+                        for (i = 0; i < index; i++)
                         {
                             EventData_Destroy(newEntry->eventDataList[i]);
                         }
@@ -1855,9 +1857,10 @@ void EventHubClient_LL_DoWork(EVENTHUBCLIENT_LL_HANDLE eventhub_client_ll)
 
                             if (!is_error)
                             {
+                                tickcounter_ms_t current_time;
+                                
                                 currentEvent->currentStatus = WAITING_FOR_ACK;
 
-                                tickcounter_ms_t current_time;
                                 (void)tickcounter_get_current_ms(eventhub_client_ll->counter, &current_time);
                                 if (eventhub_client_ll->msg_timeout > 0 && ((current_time-currentEvent->idle_timer)/1000) > eventhub_client_ll->msg_timeout)
                                 {

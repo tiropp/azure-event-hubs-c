@@ -7,6 +7,9 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#if defined(MSVC_LESS_1600_WINCE)
+# include <cerrno>
+#endif
 
 #include "azure_c_shared_utility/agenttime.h"
 #include "azure_c_shared_utility/gballoc.h"

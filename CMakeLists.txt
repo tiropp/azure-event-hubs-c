@@ -16,15 +16,29 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 add_definitions(-DREFCOUNT_ATOMIC_DONTCARE)
 add_definitions(-D__STDC_NO_ATOMICS__=1)
 
+if (MSVC AND MSVC_VERSION LESS 1600)
+  set(MSVC_LESS_1600 1)
+  add_definitions(-DMSVC_LESS_1600)
+
+  if( WINCE )
+    set(MSVC_LESS_1600_WINCE 1)
+    add_definitions(-DMSVC_LESS_1600_WINCE)
+  endif()
+endif()
+
 if(IN_OPENWRT)
     ADD_DEFINITIONS("$ENV{TARGET_LDFLAGS}" "$ENV{TARGET_CPPFLAGS}" "$ENV{TARGET_CFLAGS}")
     INCLUDE_DIRECTORIES("$ENV{TOOLCHAIN_DIR}/usr/include" "$ENV{TARGET_LDFLAGS}" "$ENV{TARGET_CPPFLAGS}" "$ENV{TARGET_CFLAGS}")
 endif()
 
+include_directories( ${EXTERNAL_INCLUDE_DIRS} )
+
 add_subdirectory(azure-c-shared-utility)
 add_subdirectory(azure-uamqp-c)
 
 include_directories(${UAMQP_INC_FOLDER})
+
+
 
 enable_testing()
 

@@ -32,7 +32,7 @@ typedef struct EVENT_PROPERTY_TAG
 
 static bool ContainsOnlyUsAscii(const char* asciiValue)
 {
-    bool result = true;;
+    bool result = true;
     const char* iterator = asciiValue;
     while (iterator != NULL && *iterator != '\0')
     {

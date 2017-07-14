@@ -34,6 +34,9 @@ set(eventhub_client_h_files
 set(EVENTHUB_CLIENT_INC_FOLDER ${CMAKE_CURRENT_LIST_DIR}/inc CACHE INTERNAL "this is what needs to be included if using eventhub_client lib" FORCE)
 
 include_directories(${SHARED_UTIL_INC_FOLDER})
+if( MSVC_LESS_1600 )
+  include_directories(${SHARED_UTIL_INC_FOLDER}/azure_c_shared_utility/msvc1500)
+endif()
 
 include_directories(${EVENTHUB_CLIENT_INC_FOLDER})
 
